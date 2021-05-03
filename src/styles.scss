@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+code:not(.language-ts) {
+  color: #69f0ae;
+  border: solid gray 1px;
+  padding: 1px;
+  border-radius: 3px;
+  margin: 1px;
+}
