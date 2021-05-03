@@ -1,0 +1,71 @@
+# Actions
+
+## What are Actions?
+
+`Actions` are the most simple core concept of NgRx (and Redux in general). Action is a unique event that is used to trigger a change in the state. What does it mean? For example, we might have an action that says "Home page has been loaded". It might mean some changes in the state. For example, in our application, it might trigger an API call for lists of expenses and incomes, which will in turn trigger an event that outs that data in the `Store`, resulting ina change in the UI. Or we might have an action that says "Add a category", which will create a new category of income/expense in the `Store`, again resulting in a UI change. Again, essentially `Actions` are like commands to the `Store`, or methods that allow to update its contents. 
+
+## What does an Action look like?
+
+Actions are simple. An action is usually an object with just two properties: a `type`, a string that indicates what *exactly* that action represents, and an optional `payload` that is kind of like a function argument. In our example, an action that adds a category might look like this:
+
+```ts
+const addCategoryAction = {
+  type: '[Categories List] Add Category',
+  payload: {name: 'Food'},
+};
+```
+
+This is an action that adds a category named `Food` to the list of all categories. Of course, we still haven't written the logic that actually uses this action to put the data in the store, but for now we are focusing on the `Actions`. In NgRx, there is a simpler, built-in way of creating `Actions`, namely the `createAction` function. To start learning about it, let's create a folder names `state` in our `src/app` directory, and a file called `actions.ts` inside it. Now, let's put this code inside that file:
+
+```ts
+// src/app/state/actions.ts
+import { createAction, props } from '@ngrx/store'; 
+
+export const addCategory = createAction(
+  '[Category List] Add Category',
+  props<{name: string}>(),
+);
+```
+
+Let's break down this example. First of all, the name `createAction` is a bit deceptive; it does not create an action; in fact, it creates a function which, when called, wil produce an action object. The first argument is the `type` of the action that will be produced. When called, the `addCategory` function will **always** create an action with type "[Category List] Create Category". The second argument uses the bizarre function `props`, which is a generic function that allows us to define the type of the `payload` which the created action will have. Essentially, it explains that in order to create the action using the `addCategory` function, we should call it and provide an object that has a property `name` which is a `string`. Let's do this and `console.log` the result.
+
+```ts
+// src/app/app.component.ts
+import { Component, OnInit } from '@angular/core';
+
+import { addCategory } from './state/actions.ts';
+
+@Component({
+  // component boilerplate omitted for the sake of brevity
+})
+export class AppComponent implements OnInit {
+  ngOnInit() {
+    console.log(addCategory({name: 'Food'}));
+  }
+} 
+```
+
+In the console, we will see the following:
+
+```js
+{type: '[Category List] Add Category', payload: {name: 'Food'}}
+```
+
+So essentially, `createAction` provided us with an easy way of creating actions of the same type. `addCategory` in our case is an `ActionCreator`, a function which produces an action object whenever called, and `props` explained what argument that `ActionCreator` function expects. 
+
+### Homework
+
+Yes, you've read it correctly: we have learned how to write some basic code in NgRx, so it is time for some homework!
+*For this homework, assume categories cannot have duplicate names. We will deal with this problem later*
+
+1. Create an action for deleting a category. It should receive a string with the name of the category, and in the next chapter we will use that code to write the actual logic for deleting the category.
+2. Create an action for updating a category. It must receive a `Category` object (`{name: string}`), and again, we will right the code to update the category in the next chapter
+
+> **Important!** Do not move to the next chapter without adding the homework code! We will be using that code in the next chapters
+
+Example of a solution to the homework:
+
+>! 1. const deleteCategory = createAction('[Category List] Delete Category, props<string>()');
+>! 2. const updateCategory = createAction('[Category List] Update Category', props<{name: string}>());
+
+In this chapter, we learned how to create `Actions`, unique events that specify what should happen to the state. In the next one, we will be writing code that actually does the transformation in the state.
