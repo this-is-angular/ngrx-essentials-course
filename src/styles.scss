@@ -3,7 +3,11 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-code:not(.language-ts) {
+.mat-sidenav-container {
+  height: 100% !important;
+}
+
+code:not(.language-ts, .language-bash) {
   color: #69f0ae;
   border: solid gray 1px;
   padding: 1px;

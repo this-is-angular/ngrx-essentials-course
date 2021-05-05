@@ -9,9 +9,12 @@ import { map } from 'rxjs/operators';
 })
 export class ChaptersComponent implements OnInit {
 
-  chapterPath$ = this.route.paramMap.pipe(
+  chapterNumber$ = this.route.paramMap.pipe(
     map(params => params.get('chapter')),
-    map(chapter => `assets/content/chapter-${chapter}.md`),
+  );
+
+  chapterPath$ = this.chapterNumber$.pipe(
+    map(chapter => `assets/content/chapters/chapter-${chapter}.md`),
   );
 
   nextChapterUrl$ = this.route.paramMap.pipe(

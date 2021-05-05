@@ -1,6 +1,8 @@
 <mat-sidenav-container>
   <mat-sidenav [opened]="sidebarOpen" (closedStart)="sidebarOpen = false">
-    Start
+    <p *ngFor="let chapter of chapters; let i = index" [routerLink]="['/chapter', i + 1]">
+      <a>{{ chapter }}</a>
+    </p>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar>

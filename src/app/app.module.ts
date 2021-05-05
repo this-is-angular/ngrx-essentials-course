@@ -11,11 +11,13 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChaptersComponent } from './chapters/chapters.component';
 import { HttpClientModule } from '@angular/common/http';
+import { HomeworkComponent } from './homework/homework.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ChaptersComponent,
+    HomeworkComponent,
    ],
   imports: [
     BrowserModule,

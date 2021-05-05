@@ -61,11 +61,11 @@ Yes, you've read it correctly: we have learned how to write some basic code in N
 1. Create an action for deleting a category. It should receive a string with the name of the category, and in the next chapter we will use that code to write the actual logic for deleting the category.
 2. Create an action for updating a category. It must receive a `Category` object (`{name: string}`), and again, we will right the code to update the category in the next chapter
 
+> You will find solution code for all the homeworks in the end of the chapters
 > **Important!** Do not move to the next chapter without adding the homework code! We will be using that code in the next chapters
 
 Example of a solution to the homework:
 
->! 1. const deleteCategory = createAction('[Category List] Delete Category, props<string>()');
->! 2. const updateCategory = createAction('[Category List] Update Category', props<{name: string}>());
+
 
 In this chapter, we learned how to create `Actions`, unique events that specify what should happen to the state. In the next one, we will be writing code that actually does the transformation in the state.
