@@ -1,0 +1,232 @@
+# Working with side effects
+
+## What are side effects?
+
+When working with NgRx (and probably most other state management systems) you will often encounter the phrase "side effects". But what are those really? Let's examine this concept closely
+
+So far, we have built an application that is pretty straightforward, it takes some data (in our case from the `Store`), and renders it to the UI. We can also modify that data using an `Action`. Again this is a very simple relationship: `Store` -> Data -> `Selectors` -> UI -> Events (like a user adding a financial record) -> `Action` -> `Reducer` -> `Store` and so on. But what about modifying things that are not part of the `Store`, but are inevitably related to it? 
+
+You might ask, why do we need NgRx to deal with logic that is not directly a part of it? Let's look at a most popular example.
+As mentioned in the previous chapter, in a real web application the data usually comes from a remote server, a persistent database that exposes methods through an API which we can use to retrieve, add, modify and delete that data. Of course, in an app that uses ngRx we would want to store that data in the `Store` and access it through a `Selector`. But how do we put that data inside the `Store` in the first place? We can't just make an HTTP request in the `initialState` of the `Store`; we might need parameters, and also we cannot inject our service from the previous chapter there. Of course, we could do the following:
+
+```ts
+// src/app/category-list/category-list-container/category-list-container.component.ts
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+
+import { categories } from '../../state/selectors';
+import { storeCategories } from '../../state/actions';
+
+@Component({
+  selector: 'app-category-list-presenter',
+  template: '<app-category-list-presenter [categories]="categories$ | async"></app-category-list-presenter>',
+})
+export class CategoryListContainer implements OnInit {
+  categories$ = this.store.select(categories);
+  
+  constructor (
+    private readonly store: Store,
+    private readonly categoryService: CategoryService,
+  ) {}
+  
+  ngOnInit() {
+    this.categoryService.getCategories().subscribe(categories => this.store.dispatch(storeCategories({payload: categories})));
+  }
+}
+```
+
+In this example, we used our component to get the data from the service, then dispatch a new action that stores that categories in the application `State`, so that we can use the selector to retrieve and display that data in the same component.
+
+I am specifically not writing the action and the reducer part of this code, because we are not going to use this code at all, as this defeats the whole purpose of using NgRx in the first place. Think about it:
+
+1. We want our components to deal with as little business logic as possible, but in this case we have a component that goes through the entire hassle of making an HTTP call and storing the data
+2. We want less code in our components, but some real world components might load huge chunks of different data and make dozens of HTTP requests; if we start making all of those HTTP requests, we will end up with a huge, bloated component
+3. Ideally, we want a component to say "I am here, please give me my data", and just receive that data through selectors, without knowing where exactly that data came from
+
+So, essentially, loading data from a remote server is a side effect in our case; it is necessary, but it is not a part of the direct NgRx lifecycle we mentioned previously. So how do we deal with this problem?
+
+## @ngrx/effects
+
+Thankfully NgRx offers another tool for solving exactly this issue, called `@ngrx/effects`. 
+
+Essentially, `@ngrx/effects` is a library that provides functions that help us create handlers for side effects, like making HTTP calls that impact the state, and so on. Let's begin by bringing it to our application
+
+```bash
+npm install @ngrx/effects
+```
+
+Now we have the effects library in our application. Let's register it in our `AppModule`:
+
+```ts
+// other imports omitted
+import { EffectsModule } from '@ngrx/effects';
+
+@NgModule({
+  // other metadata omitted
+  imports: [
+    // other imports omitted
+    EffectsModule.forRoot([]),
+  ],
+})
+export class AppModule {}
+```
+
+As you see, we imported the `EffectsModule` and registered it with an empty array. This (for now) empty array is where our effects will go.
+
+But what are NgRx effects? An `Effect` is an `Injectable` class (a service if we put it a bit harshly) that registers side-effect handling functions. Let's create an `effects.ts` file in our `state` folder, write an empty `Effect` there and register it:
+
+```ts
+@Injectable()
+export class CategoriesEffects {
+  
+}
+```
+
+An in `AppModule`:
+```ts
+// other imports omitted
+import { CategoriesEffects } from './state/effects.ts';
+
+@NgModule({
+  // other metadata omitted
+  imports: [
+    // other imports omitted
+    EffectsModule.forRoot([CategoriesEffects]),
+  ],
+})
+export class AppModule {}
+```
+
+Now we have a registered `Effect`, and NgRx will invoke its handlers when necessary. But we haven't written any handlers yet! Before we do, let's understand the theory behind how all this works:
+
+1. As with everything in NgRx, the central thing is an `Action`, that gets dispatched an tells NgRx to please perform a specific side effect
+2. Then we have a handler, that is an `Observable` stream that converts our `Action` to some concrete function, say an HTTP request
+3. Then that stream gets mapped to another `Action` that impacts the store, say, stores the retrieved information
+4. Everything is done using RxJS streams, so we are going to up our knowledge of RxJS
+
+In our case, retrieving and storing the categories list is going to have the following steps:
+
+1. An action is dispatched telling NgRx that the categories component has been initialized
+2. An Effect handler gets invoked on our`Action`, makes the HTTP call to our API
+3. The returned result is being mapped to another `Action`, say `loadCategoriesSuccess`, which puts the data in the `Store` through a reducer, something we already are familiar with
+
+Let's start setting pieces for this
+
+First of all in our `actions.ts` file let's create the corresponding actions:
+
+```ts
+// other imports omitted
+import { Category } from './models';
+
+// other actions omitted
+
+export const categoriesListLoaded = createAction('[Category List] Categories List Loaded');
+export const loadCategoriesSuccess = createAction('[Category List] Load Categories Success', props<{payload: Category[]}>());
+export const loadCategoriesError = createAction('[Category List] Load Categories Error');
+```
+
+As you can see, we have created the actions we mentioned, and also a specific `Action` that will get invoked when our HTTP call fails (these kinds of things tend to happen from time to time, and we need error handling)
+
+Let's also put the success logic in our reducer function: we need to put the categories list when it is successfully retrieved:
+
+```ts
+import { addCategory, loadCategorySuccess } from './actions';
+
+// other imports omitted
+
+const _reducer = createReducer(
+  initialState,
+  // other handlers omitted 
+  on(loadCategorySuccess, (state, action) => ({...state, categories: action.payload})),
+);
+``` 
+
+Now we will be able to modify our state an put the categories upon successful retrieval. Let's now get down to the most important thing: creating a side effect handler
+
+## How are handlers registered?
+
+All handlers are `Observable` streams as mentioned earlier, to which NgRx will subscribe and perform them when the corresponding `Action` gets dispatched. Here is how it works:
+
+1. NgRx provides a `createEffect` function that is used to register a handler
+2. It also provides us with a specific `Observable` called `Actions`. It is a stream of all actions dispatched in the app; basically, whenever any action gets dispatched throughout the application, this `Observable` will emit it
+3. It provides us with a custom RxJS operator called `ofType`, which allows us to filter out the specific actions we need for this particular side effect
+4. We can then use an operator like `mergeMap` to redirect our `Observable` to a service call that gets the data from the API.
+5. We need to use the `map` operator and change the result of our HTTP call to an `Action` that puts that result in the `Store` (i.e. `loadCategoriesSuccess`)
+6. We can use `catchError` to map the stream to the error handling `Action` (i.e. `loadCategoriesError`) if the request fails
+7. In other places, we can write other effects that handle error actions separately
+
+Let's see it all in action:
+
+```ts
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { of } from 'rxjs';
+import { mergeMap, map, catchError } from 'rxjs/operators';
+
+import { CategoryService } from '../services/category.service';
+import { categoriesListLoaded, loadCategoriesSuccess, loadCategoriesError } from './actions';
+
+export class CategoriesEffects {
+
+  categoriesListLoaded$ = createEffect(() => this.actions$.pipe(
+    ofType(categoriesListLoaded),
+    mergeMap(() => this.categoriesService.getCategories().pipe(
+      map(categories => loadCategoriesSuccess({payload: categories})),
+      catchError(() => of(loadCategoriesError())),
+    ))
+  ));
+
+  constructor(
+    private readonly actions$: Actions,
+    private readonly categoriesService: CategoryService,
+  ) { }
+
+}
+```
+
+Let's look at this in depth. Here, `categoriesListLoaded$` is an `Observable` handler for the side effect that will get invoked when the `CategoryListContainer` gets initialized and indicated it wants data; because we registered the `Effect` class in the `EffectsModule`, NgRx will subscribe to it for us and wait for action. `createEffect` function takes a callback that returns the handler. The handler itself takes the `Actions` `Observable`, uses the `ofType` operator to specify which exact `Action` we need, then uses `mergeMap` to redirect our stream to the HTTP call that our service makes, and then maps it to the success `Action` when the request is performed successfully, and to an error `Action` when it fails.
+
+The last thing we need to do is dispatch the `Action` that triggers this whole thing from the component:
+
+```ts
+export class CategoryListContainerComponent implements OnInit {
+  categories$ = this.store.select(categories)
+
+  constructor(
+    private readonly store: Store,
+  ) { }
+
+  ngOnInit() {
+    this.store.dispatch(categoriesListLoaded());
+  }
+
+  // other methods omitted
+
+}
+```
+
+So here is the lifecycle of this component:
+
+1. When initialized, it dispatches the `categoriesListLoaded` `Action`
+2. The `Effect` gets triggered because we used `ofType`
+3. An HTTP call is made
+4. The result of that call is mapped to the action `loadCategoriesSuccess` with the corresponding payload (the list of categories)
+5. Because NgRx is subscribed to the `categoriesListLoaded$` `Observable`, it receives the `Action` and dispatches it to the `Store`, triggering the `Reducer` function
+6. In the reducer our specific handler receives the categories payload and puts it in the `Store`
+7. NgRx propagates the changes to the components
+8. Our component has used a `Selector` to get the categories list data, and it will automatically receive that data when this cycle is complete
+9. That's it!
+
+Usually effects require 3 actions: one which triggers the effect handler, another one to propagate the successful result to the reducer to change the `State`, and one that is dispatched where we have an error.
+
+## Homework
+
+We created a flow in which we get the categories data from the remote API. As you remember, in [Chapter 8](/chapters/8) we created a delete button that removes a category, and also implemented a feature that allows the user to add a new category. So after completing this chapter you should try to:
+
+1. Make the delete button actually delete the category fro the database, using our service method and a new effect 
+2. Have the same for adding a category
+
+*Hint*: the `Actions` `Observable` emits action objects themselves, so in the `mergeMap` callback you can access the action object and its payload using the argument like this: `mergeMap((action) => doSomethingWithPayload(action.payload))` 
+
+*Note*: You will have to modify the components and the reducer function also; those are not directly relevant to this chapter's work, so won't be included in the solution example
+
+Now we have learned about effects, one of the most important features of NgRx. In the next chapter, we will dive a bit deeper and see what other use cases (apart from making HTTP requests) NgRx Effects have.

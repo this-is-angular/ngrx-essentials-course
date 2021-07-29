@@ -110,6 +110,27 @@ As promised, magic happens here. We already covered that in order to trigger a `
 
 Awesome, right?
 
-This diagram illustrates how this whole thing works:
+This diagram illustrates how the whole thing works:
 
+![NgRx flow diagram](https://raw.githubusercontent.com/Armenvardanyan95/ngrx-tutorial/main/src/assets/content/images/store-diagram.png)
+
+This showcases the whole process we described:
+
+1. Component dispatches an `Action`
+2. `Reducer` takes the old `State` from the `Store` and the `Action`
+3. `Reducer` creates the new `State` and puts in the `Store`
+4. `Store` triggers the `Selectors`
+5. `Selector` emits the new derived `State` to the component via an `Observable`
+6. Component displays the new data with the `async` pipe
+
+And that's it
+
+## Homework
+
+We created a flow in which the user can add a category. Now it is time for you to add a low in which the user can delete one. We already have the `Action` responsible for this and the handler in the `Reducer`, so go on and 
+
+1. Add a delete button in front of every category item in the UI, which will emit a new `categoryDeleted` event to the container
+2. In the container, dispatch the `Action` that deletes the category and observe the results
+
+We have come full circle now and can read, modify and select `State`. In the upcoming chapter, we will lay some groundwork so we can start interacting with remote APIs using NgRx.
 

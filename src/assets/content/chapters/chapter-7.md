@@ -94,7 +94,6 @@ import { reducer } from './state/reducer';
   // other metadata omitted
   imports: [
     // other imports omitted
-    StoreModule,
     StoreModule.forRoot({categories: reducer}),
   ],
 })

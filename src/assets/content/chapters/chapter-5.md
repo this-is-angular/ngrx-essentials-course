@@ -2,7 +2,7 @@
 
 ## What are Actions?
 
-`Actions` are the most simple core concept of NgRx (and Redux in general). Action is a unique event that is used to trigger a change in the state. What does it mean? For example, we might have an action that says "Home page has been loaded". It might mean some changes in the state. For example, in our application, it might trigger an API call for lists of expenses and incomes, which will in turn trigger an event that outs that data in the `Store`, resulting ina change in the UI. Or we might have an action that says "Add a category", which will create a new category of income/expense in the `Store`, again resulting in a UI change. Again, essentially `Actions` are like commands to the `Store`, or methods that allow to update its contents. 
+`Actions` are the most simple core concept of NgRx (and Redux in general). Action is a unique event that is used to trigger a change in the state. What does it mean? For example, we might have an action that says "Home page has been loaded". It might mean some changes in the state. For example, in our application, it might trigger an API call for lists of expenses and incomes, which will in turn trigger an event that puts that data in the `Store`, resulting in a change in the UI. Or we might have an action that says "Add a category", which will create a new category of income/expense in the `Store`, again resulting in a UI change. Again, essentially `Actions` are like commands to the `Store`, or methods that allow to update its contents. 
 
 ## What does an Action look like?
 
@@ -63,9 +63,5 @@ Yes, you've read it correctly: we have learned how to write some basic code in N
 
 > You will find solution code for all the homeworks in the end of the chapters
 > **Important!** Do not move to the next chapter without adding the homework code! We will be using that code in the next chapters
-
-Example of a solution to the homework:
-
-
 
 In this chapter, we learned how to create `Actions`, unique events that specify what should happen to the state. In the next one, we will be writing code that actually does the transformation in the state.
