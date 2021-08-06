@@ -1,6 +1,6 @@
 ### Homework example 1:
 ```ts
-// in the category-list-presenter.ts file
+// in the effects.ts file
 export class CategoriesEffects {
   deleteCategory$ = createEffect(() => this.actions$.pipe(
     ofType(deleteCategory),
