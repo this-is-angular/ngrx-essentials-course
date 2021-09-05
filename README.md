@@ -1,27 +1,33 @@
-# NgrxTutorial
+# Website
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.2.
+This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
 
-## Development server
+### Installation
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+```
+$ yarn
+```
 
-## Code scaffolding
+### Local Development
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```
+$ yarn start
+```
 
-## Build
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+### Build
 
-## Running unit tests
+```
+$ yarn build
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
-## Running end-to-end tests
+### Deployment
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```
+$ GIT_USER=<Your GitHub username> USE_SSH=true yarn deploy
+```
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
