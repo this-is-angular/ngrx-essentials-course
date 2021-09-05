@@ -1,17 +1,24 @@
-# Actions
+---
+title: "Chapter 5: Actions"
+sidebar_position: 5
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import Exercise1Actions from "!!raw-loader!./chapter-5/exercise-1/actions";
+import Exercise2Actions from "!!raw-loader!./chapter-5/exercise-2/actions";
 
 ## What are Actions?
 
-`Actions` are the most simple core concept of NgRx (and Redux in general). Action is a unique event that is used to trigger a change in the state. What does it mean? For example, we might have an action that says "Home page has been loaded". It might mean some changes in the state. For example, in our application, it might trigger an API call for lists of expenses and incomes, which will in turn trigger an event that puts that data in the `Store`, resulting in a change in the UI. Or we might have an action that says "Add a category", which will create a new category of income/expense in the `Store`, again resulting in a UI change. Again, essentially `Actions` are like commands to the `Store`, or methods that allow to update its contents. 
+`Actions` are the most simple core concept of NgRx (and Redux in general). Action is a unique event that is used to trigger a change in the state. What does it mean? For example, we might have an action that says "Home page has been loaded". It might mean some changes in the state. For example, in our application, it might trigger an API call for lists of expenses and incomes, which will in turn trigger an event that puts that data in the `Store`, resulting in a change in the UI. Or we might have an action that says "Add a category", which will create a new category of income/expense in the `Store`, again resulting in a UI change. Again, essentially `Actions` are like commands to the `Store`, or methods that allow to update its contents.
 
 ## What does an Action look like?
 
-Actions are simple. An action is usually an object with just two properties: a `type`, a string that indicates what *exactly* that action represents, and an optional `payload` that is kind of like a function argument. In our example, an action that adds a category might look like this:
+Actions are simple. An action is usually an object with just two properties: a `type`, a string that indicates what _exactly_ that action represents, and an optional `payload` that is kind of like a function argument. In our example, an action that adds a category might look like this:
 
 ```ts
 const addCategoryAction = {
-  type: '[Categories List] Add Category',
-  payload: {name: 'Food'},
+  type: "[Categories List] Add Category",
+  payload: { name: "Food" },
 };
 ```
 
@@ -19,11 +26,11 @@ This is an action that adds a category named `Food` to the list of all categorie
 
 ```ts
 // src/app/state/actions.ts
-import { createAction, props } from '@ngrx/store'; 
+import { createAction, props } from "@ngrx/store";
 
 export const addCategory = createAction(
-  '[Category List] Add Category',
-  props<{name: string}>(),
+  "[Category List] Add Category",
+  props<{ name: string }>()
 );
 ```
 
@@ -31,18 +38,18 @@ Let's break down this example. First of all, the name `createAction` is a bit de
 
 ```ts
 // src/app/app.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
-import { addCategory } from './state/actions.ts';
+import { addCategory } from "./state/actions.ts";
 
 @Component({
   // component boilerplate omitted for the sake of brevity
 })
 export class AppComponent implements OnInit {
   ngOnInit() {
-    console.log(addCategory({name: 'Food'}));
+    console.log(addCategory({ name: "Food" }));
   }
-} 
+}
 ```
 
 In the console, we will see the following:
@@ -51,12 +58,12 @@ In the console, we will see the following:
 {type: '[Category List] Add Category', payload: {name: 'Food'}}
 ```
 
-So essentially, `createAction` provided us with an easy way of creating actions of the same type. `addCategory` in our case is an `ActionCreator`, a function which produces an action object whenever called, and `props` explained what argument that `ActionCreator` function expects. 
+So essentially, `createAction` provided us with an easy way of creating actions of the same type. `addCategory` in our case is an `ActionCreator`, a function which produces an action object whenever called, and `props` explained what argument that `ActionCreator` function expects.
 
 ### Homework
 
 Yes, you've read it correctly: we have learned how to write some basic code in NgRx, so it is time for some homework!
-*For this homework, assume categories cannot have duplicate names. We will deal with this problem later*
+_For this homework, assume categories cannot have duplicate names. We will deal with this problem later_
 
 1. Create an action for deleting a category. It should receive a string with the name of the category, and in the next chapter we will use that code to write the actual logic for deleting the category.
 2. Create an action for updating a category. It must receive a `Category` object (`{name: string}`), and again, we will right the code to update the category in the next chapter
@@ -65,3 +72,18 @@ Yes, you've read it correctly: we have learned how to write some basic code in N
 > **Important!** Do not move to the next chapter without adding the homework code! We will be using that code in the next chapters
 
 In this chapter, we learned how to create `Actions`, unique events that specify what should happen to the state. In the next one, we will be writing code that actually does the transformation in the state.
+
+<details>
+  <summary>Exercise 1 solution</summary>
+
+  <CodeBlock title="actions.ts" className="language-ts">
+    {Exercise1Actions}
+  </CodeBlock>
+</details>
+
+<details>
+  <summary>Exercise 2 solution</summary>
+  <CodeBlock title="actions.ts" className="language-ts">
+    {Exercise2Actions}
+  </CodeBlock>
+</details>

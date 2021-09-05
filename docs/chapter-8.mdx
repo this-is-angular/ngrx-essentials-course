@@ -1,4 +1,12 @@
-# Modifying State
+---
+title: "Chapter 8: Modifying State"
+sidebar_position: 8
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import Exercise1CategoryListPresenterComponent from "!!raw-loader!./chapter-8/exercise-1/category-list-presenter.component";
+import Exercise1CategoryListPresenterTemplate from "!!raw-loader!./chapter-8/exercise-1/category-list-presenter.component.html";
+import Exercise2CategoryListContainerComponent from "!!raw-loader!./chapter-8/exercise-2/category-list-container.component";
 
 ## Adding stuff
 
@@ -136,3 +144,26 @@ We created a flow in which the user can add a category. Now it is time for you t
 2. In the container, dispatch the `Action` that deletes the category and observe the results
 
 We have come full circle now and can read, modify and select `State`. In the upcoming chapter, we will lay some groundwork so we can start interacting with remote APIs using NgRx.
+
+<details>
+  <summary>Exercise 1 solution</summary>
+  
+  <CodeBlock title="category-list-presenter.component.ts" className="language-ts">
+    {Exercise1CategoryListPresenterComponent}
+  </CodeBlock>
+
+  <CodeBlock title="category-list-presenter.component.html" className="language-ts">
+    {Exercise1CategoryListPresenterTemplate}
+  </CodeBlock>
+</details>
+
+<details>
+  <summary>Exercise 2 solution</summary>
+
+  <CodeBlock
+    title="category-list-container.component.ts"
+    className="language-ts"
+  >
+    {Exercise2CategoryListContainerComponent}
+  </CodeBlock>
+</details>

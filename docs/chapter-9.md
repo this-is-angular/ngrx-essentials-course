@@ -1,4 +1,7 @@
-# Building a real application
+---
+title: "Chapter 9: Building a real application"
+sidebar_position: 9
+---
 
 ## What makes a real WebApp?
 
@@ -6,7 +9,7 @@ In our code so far, we have added and used data models that we stored in variabl
 
 ## Building a backend
 
-Don't be worried because of the title of this paragraph, we are not going to build a *real* backend. Instead, for learning purposes, to better emulate a real development environment, we are going to run a mock backend using a special tool called `json-server`. It is a program written in Node.js that takes a JSON file and turns it into a sort of a database, running it ona specific port, so that we can access it using HTTP requests. It follows the REST principles. so we can:
+Don't be worried because of the title of this paragraph, we are not going to build a _real_ backend. Instead, for learning purposes, to better emulate a real development environment, we are going to run a mock backend using a special tool called `json-server`. It is a program written in Node.js that takes a JSON file and turns it into a sort of a database, running it ona specific port, so that we can access it using HTTP requests. It follows the REST principles. so we can:
 
 1. Use `get` requests to retrieve lists of data
 2. Use `get` requests by `id` to retrieve a single entity from the "database"
@@ -23,7 +26,7 @@ Installing is simple. We have to install it globally so we are able to run it in
 ```bash
 npm install -g json-server
 ```
- 
+
 When the installation is finished, head to this [file](https://github.com/Armenvardanyan95/ngrx-tutorial-app/blob/main/database.json) on GitHub and download it's contents to the root directory of your application. Let's explore the contents a little. The file looks like this:
 
 ```ts
@@ -48,7 +51,7 @@ When the installation is finished, head to this [file](https://github.com/Armenv
 }
 ```
 
-As you see, we have data about the categories and expenses. When we run `json-server` on our `database.json` file, we will have access to the categories through `http://localhost:3000/categories/` URL, and to the expenses through `http://localhost:3000/expenses/` URL. Let's do this! In your root directory, run 
+As you see, we have data about the categories and expenses. When we run `json-server` on our `database.json` file, we will have access to the categories through `http://localhost:3000/categories/` URL, and to the expenses through `http://localhost:3000/expenses/` URL. Let's do this! In your root directory, run
 
 ```bash
 json-server database.json
@@ -63,17 +66,14 @@ In Angular, as you most probably know, we use services to interact with remote A
 ```ts
 // src/app/services/category.service.ts
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: "root" })
 export class CategoryService {
+  readonly baseUrl = "http://localhost:3000/categories";
 
-  readonly baseUrl = 'http://localhost:3000/categories';
-
-  constructor(
-    private readonly http: HttpClient,
-  ) {}
+  constructor(private readonly http: HttpClient) {}
 
   getCategories() {
     return this.http.get<Category[]>(this.baseUrl);
@@ -93,5 +93,5 @@ export class CategoryService {
 }
 ```
 
-In next chapters, we will be using this service to add categories, retrieve them and delete them *really*, with a database and persistence.
+In next chapters, we will be using this service to add categories, retrieve them and delete them _really_, with a database and persistence.
 This chapter has been a setup of some tools that we are going to use extensively. In the upcoming chapter, we will learn to interact with remote APIs in an NgRx way.

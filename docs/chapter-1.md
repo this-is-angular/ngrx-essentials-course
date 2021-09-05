@@ -1,14 +1,17 @@
-# Chapter 1: Introduction to NgRx
+---
+title: "Chapter 1: Introduction to NgRx"
+sidebar_position: 1
+---
 
 ## Preface
 
-*This tutorial was created and is maintained by Armen Vardanyan, an Angular/NgRx enthusiast just like you. The project is open sourced, read about how you can also contribute to is here*
+_This tutorial was created and is maintained by Armen Vardanyan, an Angular/NgRx enthusiast just like you. The project is open sourced, read about how you can also contribute to is here_
 
 I want to help people master skills necessary for WebDev as quick as possible, so I won't be using big words and long introductions here. Just a few sentences about this tutorial
 
 ### What will you learn?
 
-After you complete this tutorial, you will 
+After you complete this tutorial, you will
 
 1. Know the basic and advanced concepts of NgRx
 2. Be able to create applications using NgRx
@@ -22,9 +25,9 @@ I hold a firm belief that in order to learn and understand something thoroughly,
 
 ### How is this tutorial structured?
 
-The tutorial is divided into simple chapters (you are, as you've noticed, reading Chapter 1 right now). After you finish a chapter, you can move on to the next one. 
+The tutorial is divided into simple chapters (you are, as you've noticed, reading Chapter 1 right now). After you finish a chapter, you can move on to the next one.
 Each chapter explores one single, isolated topic, with small examples, and then puts it into use in the application that we are building.
 
 ### What's next?
 
-Now, that we know what and why we are doing, let's move on to Chapter 2, where we will actually start doing stuff. 
+Now, that we know what and why we are doing, let's move on to Chapter 2, where we will actually start doing stuff.

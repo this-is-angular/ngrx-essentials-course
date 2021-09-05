@@ -1,10 +1,13 @@
-# Chapter 3 - NgRx: the What
+---
+title: "Chapter 3: NgRx: The What"
+sidebar_position: 3
+---
 
 ## What is NgRx?
 
 ### Flux design pattern
 
-During the last decade, Facebook has popularized an approach in building single page Web Applications called the [Flux](https://facebook.github.io/flux/docs/in-depth-overview/). [Redux](https://redux.js.org/), a vastly popular state management library for React, is built using the Flux approach, and so is NgRx. They have similar (almost the same) concepts, and serve the same need. NgRx can be called "Redux + RxJS". It combines the simplicity and centralization of Redux with the power of `Observables`. 
+During the last decade, Facebook has popularized an approach in building single page Web Applications called the [Flux](https://facebook.github.io/flux/docs/in-depth-overview/). [Redux](https://redux.js.org/), a vastly popular state management library for React, is built using the Flux approach, and so is NgRx. They have similar (almost the same) concepts, and serve the same need. NgRx can be called "Redux + RxJS". It combines the simplicity and centralization of Redux with the power of `Observables`.
 
 #### So what is Flux?
 
@@ -15,7 +18,7 @@ In Flux, the state of the application is considered as a one unified entity, tha
    - Asynchronous programming poses yet another big threat to this idea, with async callbacks accessing the same reference of the object and modifying it, possible overwriting data that should have been used by another callback, introducing hard-to-fix issues like race conditions and such.
 2. Using an event delivery system (like an event bus) that will notify component about specific events to which those components need to react accordingly. This would be a better approach, but still introduces problems:
    - We need to subscribe to events in every component, possibly more than a dozen of those. This can make the component code unreadable.
-   - When an event is sent, it is hard to really determine *how exactly* the state of the application is being modified. We would need to go through all subscriptions of that event to get a grasp of what it really does (and it still might not be enough)
+   - When an event is sent, it is hard to really determine _how exactly_ the state of the application is being modified. We would need to go through all subscriptions of that event to get a grasp of what it really does (and it still might not be enough)
    - Such a system might tempt developers to write lots of side effects (we will talk about side effects and how we deal with them in NgRx in later chapters)
    - If two components access the same state, we will have a problem synchronizing them together, paving way for new hard-to-fix bugs
 
@@ -28,7 +31,4 @@ Flux solves this problem with a series of easy to grasp concepts, which bundled 
 - Allows to a actually debug state changes
 - Is declarative
 
-NgRx does the same, but for Angular. If at this point you think "why do I event bother? My app works fine right now", then let's now explore why exactly do we need solutions like NgRx. 
-
-
-
+NgRx does the same, but for Angular. If at this point you think "why do I event bother? My app works fine right now", then let's now explore why exactly do we need solutions like NgRx.

@@ -1,4 +1,7 @@
-# Chapter 2 - Getting started: Installing dependencies and creating the project
+---
+title: "Chapter 2: Getting started: Installing dependencies and creating the project"
+sidebar_position: 2
+---
 
 ## Installations
 
@@ -25,17 +28,17 @@ Now let's add NgRx to the party:
 
 1. Run the command `cd financial-logger` to move to the root directory of our project
 2. Run the command `npm install @ngrx/store` to get NgRx
-3. NgRx consists of several packages, but the most basic functionality is inside `@ngrx/store`. 
+3. NgRx consists of several packages, but the most basic functionality is inside `@ngrx/store`.
 4. We will add more packages as we dive into more complex concepts
 
-That's it. Now we have an empty project with NgRx installed. 
+That's it. Now we have an empty project with NgRx installed.
 
 ## Up and running
 
-In the `app.module.ts` file, add the following import: 
+In the `app.module.ts` file, add the following import:
 
 ```ts
-import { StoreModule } from '@ngrx/store';
+import { StoreModule } from "@ngrx/store";
 ```
 
 And in the `imports` array of the `AppModule` declarations, add this line:
@@ -55,5 +58,4 @@ export class AppModule {}
 2. Open `http://localhost:4200/`
 3. See our fresh Angular app
 
-That's it, we did the basic installations, let's now move on to chapter 3, where we will explore the the 
-
+That's it, we did the basic installations, let's now move on to chapter 3, where we will explore the the

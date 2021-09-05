@@ -1,20 +1,28 @@
-# Basic Selectors
+---
+title: "Chapter 7: Basic Selectors"
+sidebar_position: 7
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import ExerciseAppModule from "!!raw-loader!./chapter-7/exercise/app.module";
+import ExerciseSelectors from "!!raw-loader!./chapter-7/exercise/selectors";
+import ExerciseState from "!!raw-loader!./chapter-7/exercise/state";
 
 ## Using data from Store in components
 
-So far, we have created `Actions` that will notify about `State` changes and a `Reducer` function that does the actual `State` modifications. But we have not used the `State` of our application to display any visual UI corresponding to that `State`.  It is high time we do that. To do that, NgRx uses a concept called `Selectors`. Let's understand the basics of that.
+So far, we have created `Actions` that will notify about `State` changes and a `Reducer` function that does the actual `State` modifications. But we have not used the `State` of our application to display any visual UI corresponding to that `State`. It is high time we do that. To do that, NgRx uses a concept called `Selectors`. Let's understand the basics of that.
 
 ## What are Selectors?
 
-In most simple terms, `Selectors` are `pure functions` that take the `State` of ur application, and return a piece of it so that it can be used in a component (you will see NgRx extensively uses `pure functions`). In more detail, in the future chapters, our `State` will evolve to contain lots of data in the main object, for example, we will have categories, expenses, incomes, probably data about the current user (authentication, full name, etc) and so on. Obviously in a single component we don't need the entire `State`, thus we write `Selectors` which will return pieces of that `State`, for example, a `Selector` that return only the array of categories to use in the corresponding component. 
+In most simple terms, `Selectors` are `pure functions` that take the `State` of ur application, and return a piece of it so that it can be used in a component (you will see NgRx extensively uses `pure functions`). In more detail, in the future chapters, our `State` will evolve to contain lots of data in the main object, for example, we will have categories, expenses, incomes, probably data about the current user (authentication, full name, etc) and so on. Obviously in a single component we don't need the entire `State`, thus we write `Selectors` which will return pieces of that `State`, for example, a `Selector` that return only the array of categories to use in the corresponding component.
 
-Those pieces are called "slices" of the `State` sometimes, but often the term `derived State` is used, to indicate it is some modified form of the original `State`. `Selectors` can also be used to return not just a slice, but some complex calculation of the `State`, for example, we can write a `Selector` that calculates the total income based on all the items in the `incomes` array, and based on that `Selector`, another one that calculates the average. 
+Those pieces are called "slices" of the `State` sometimes, but often the term `derived State` is used, to indicate it is some modified form of the original `State`. `Selectors` can also be used to return not just a slice, but some complex calculation of the `State`, for example, we can write a `Selector` that calculates the total income based on all the items in the `incomes` array, and based on that `Selector`, another one that calculates the average.
 
 This chapter is called "Basic Selectors", so in this one we are going to write only such `Selectors` that return just slices of the `State`; in the future chapters, we will write more complex `Selectors` and learn how to create new `Selectors` from existing ones, and also how to combine them into new ones.
 
 ## Building some UI
 
-Before we proceed, let's first build some UI to show the list of the Categories. In this project, I am using Angular Material to build some pretty interface, but you can use any UI library of your choice (or even not use any). But I suggest you do use Angular Material (we are not going to use too complex components from there, even if you are unfamiliar with it, it won;t be too challenging) to follow the examples easier. You can also visit the [Angular Material official documentation](https://material.angular.io/) to grasp some new knowledge. If you choose to use it, follow this chapter; if not, skip to the next one. 
+Before we proceed, let's first build some UI to show the list of the Categories. In this project, I am using Angular Material to build some pretty interface, but you can use any UI library of your choice (or even not use any). But I suggest you do use Angular Material (we are not going to use too complex components from there, even if you are unfamiliar with it, it won;t be too challenging) to follow the examples easier. You can also visit the [Angular Material official documentation](https://material.angular.io/) to grasp some new knowledge. If you choose to use it, follow this chapter; if not, skip to the next one.
 
 Let's add Angular Material to our project first. Run the following command:
 
@@ -26,7 +34,7 @@ It might ask some multiple choice questions. You may choose a theme, whichever y
 
 Angular Material has been added to our project. Now, let's add a component that will display the list of categories of expenses/incomes from the `Store`. I will be using the Container-Presenter approach to build this component. It means we will create two components, one that handles the logic (selects data from the store, in our case), and passes it two the next one, and the other one, which only receives the data as `@Input` properties and displays the UI. You can read mor e about Container-Presenter [here](https://blog.angular-university.io/angular-component-design-how-to-avoid-custom-event-bubbling-and-extraneous-properties-in-the-local-component-tree/).
 
- In the `src/app` folder, create a new folder named `category-list`. Inside that folder, run the following commands:
+In the `src/app` folder, create a new folder named `category-list`. Inside that folder, run the following commands:
 
 ```bash
 ng generate component CategoryListContainer
@@ -37,14 +45,14 @@ Now we have two components. Let's start with the presenter, because it is the si
 
 ```ts
 // src/app/category-list/category-list-presenter/category-list-presenter.component.ts
-import { Component, Input, ChangeDetection } from '@angular/core';
+import { Component, Input, ChangeDetection } from "@angular/core";
 
 // import the Category interface from wherever you put it
 
 @Component({
-  selector: 'app-category-list-presenter',
-  templateUrl: './category-list-presenter.component.html',
-  changeDetectionStrategy: ChangeDetection.OnPush // we can use OnPush as we only rely on Input properties for data
+  selector: "app-category-list-presenter",
+  templateUrl: "./category-list-presenter.component.html",
+  changeDetectionStrategy: ChangeDetection.OnPush, // we can use OnPush as we only rely on Input properties for data
 })
 export class CategoryListPresenter {
   @Input() categories: Category[] = [];
@@ -56,7 +64,7 @@ The component class code is ready - simple as that. Now, to display the list of 
 ```ts
 // src/app/app.module.ts
 // other import statements omitted for the sake of brevity
-import { MatListModule } from '@angular/material';
+import { MatListModule } from "@angular/material";
 
 @NgModule({
   // other metadata omitted
@@ -64,22 +72,23 @@ import { MatListModule } from '@angular/material';
     // other imports omitted
     MatListModule,
   ],
-  declarations: [
-    AppComponent,
-    CategoryListContainer,
-    CategoryListPresenter,
-  ],
+  declarations: [AppComponent, CategoryListContainer, CategoryListPresenter],
 })
 export class AppModule {}
-````
+```
 
 We are all set to write the template for the presenter component:
 
 ```html
-<-- src/app/category-list/category-list-presenter/category-list-presenter.component.html -->
+<--
+src/app/category-list/category-list-presenter/category-list-presenter.component.html
+-->
 <mat-list>
-  <mat-list-item *ngFor="let category of categories">{{ category.name }}</mat-list-item>
-<.mat-list>
+  <mat-list-item *ngFor="let category of categories"
+    >{{ category.name }}</mat-list-item
+  >
+  <.mat-list></mat-list
+>
 ```
 
 Now the only thing left is to select the data from the `Store` in the container component, and pass it as `@Input` to the presenter. To select the data, we need to inject the `Store` into our component. The `Store` is a special service-class from NgRx that allows us to interact with the `State`. To inject that store, we need to import the `StoreModule` into our `AppModule`, and provide the `Reducer` from our previous chapter, so that NgRx knows what is our data an how it is modified. Let;s do this:
@@ -87,18 +96,19 @@ Now the only thing left is to select the data from the `Store` in the container 
 ```ts
 // src/app/app.module.ts
 // other import statements omitted for the sake of brevity
-import { StoreModule } from '@ngrx/store';
-import { reducer } from './state/reducer';
+import { StoreModule } from "@ngrx/store";
+import { reducer } from "./state/reducer";
 
 @NgModule({
   // other metadata omitted
   imports: [
     // other imports omitted
-    StoreModule.forRoot({categories: reducer}),
+    StoreModule.forRoot({ categories: reducer }),
   ],
 })
 export class AppModule {}
 ```
+
 A question arises, why did we provide an object with the `reducer` function, and not just the `reducer`? That is because we can have multiple `Reducers` (and we will in the future chapters), and we can also lazy-load `State` (we will learn about it in the later chapters too), so we need to provide a mapping of features to reducers. In our case, we only have one feature, that is the categories `State`, so this is th object. In the future, when we add more feature `States`, we will rename the `Reducers` to more accurately reflect the situation. For now, our global state looks like this: `{categories: AppState}`.
 Now it is time to write the `Selectors`.
 
@@ -108,10 +118,12 @@ Selectors are functions, as you remember from a past paragraph. We usually put t
 
 ```ts
 // src/app/state/selectors.ts
-import { AppState } from './state';
+import { AppState } from "./state";
 
-export const categories = (state: {categories: AppState}) => state.categories.categories;
-``` 
+export const categories = (state: { categories: AppState }) =>
+  state.categories.categories;
+```
+
 Our state contains a property named `categories` that is the `categories` `State`, which for now is named `AppState`, as it is all that we have in out app. That's why we have to return `state.categories.categories`.
 
 And that's it. As promised, the selector is as basic as it can get, it takes the `AppState`, which, as you remember, looks like this:
@@ -119,30 +131,29 @@ And that's it. As promised, the selector is as basic as it can get, it takes the
 ```ts
 export interface AppState {
   categories: Category[];
-} 
+}
 ```
 
-and returns that `categories` array. 
+and returns that `categories` array.
 
 Now let's use it in the container component. As mentioned, we inject the `Store` and select the state slice using our brand new selector. Here is how it will look like:
 
 ```ts
 // src/app/category-list/category-list-container/category-list-container.component.ts
-import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Component } from "@angular/core";
+import { Store } from "@ngrx/store";
 
-import { categories } from '../../state/selectors';
+import { categories } from "../../state/selectors";
 
 @Component({
-  selector: 'app-category-list-presenter',
-  template: '<app-category-list-presenter [categories]="categories$ | async"></app-category-list-presenter>',
+  selector: "app-category-list-presenter",
+  template:
+    '<app-category-list-presenter [categories]="categories$ | async"></app-category-list-presenter>',
 })
 export class CategoryListContainer {
   categories$ = this.store.select(categories);
-  
-  constructor (
-    private readonly store: Store,
-  ) {}
+
+  constructor(private readonly store: Store) {}
 }
 ```
 
@@ -155,13 +166,13 @@ Now let's create some routing. Let's create a routing module and a route that ta
 ```ts
 // src/app/app.routing.module.ts
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
 
-import { CategoryListContainerComponent } from './category-list/category-list-container/category-list-container';
+import { CategoryListContainerComponent } from "./category-list/category-list-container/category-list-container";
 
 const routes = [
-  { path: 'categories', component: CategoryListContainerComponent },
+  { path: "categories", component: CategoryListContainerComponent },
 ];
 
 @NgModule({
@@ -181,9 +192,7 @@ Now open your app and navigate to `/categories`. Aaaand... nothing. You won't se
 // rest of the file omitted for the sake of brevity
 
 const initialState: AppState = {
-  categories: [
-    { name: 'Food' },
-  ],
+  categories: [{ name: "Food" }],
 };
 ```
 
@@ -194,3 +203,19 @@ This chapter has been long, and we set up lots of stuff for future development, 
 We will be writing new `Selectors` a lot in the future though, so be prepared.
 
 We learned how to create `Selectors` and use them to display data from the `Store` in our UI. Next, we will learn how to trigger `State` changes and see the actual benefit of NgRx.
+
+<details>
+  <summary>Exercise solution</summary>
+
+  <CodeBlock title="state.ts" className="language-ts">
+    {ExerciseState}
+  </CodeBlock>
+
+  <CodeBlock title="app.module.ts" className="language-ts">
+    {ExerciseAppModule}
+  </CodeBlock>
+
+  <CodeBlock title="selectors.ts" className="language-ts">
+    {ExerciseSelectors}
+  </CodeBlock>
+</details>
