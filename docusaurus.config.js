@@ -1,7 +1,7 @@
 const shadesOfPurpleTheme = require("prism-react-renderer/themes/shadesOfPurple");
 
 const organizationName = "this-is-angular";
-const projectName = "ngrx-course";
+const projectName = "ngrx-essentials-course";
 const title = "NgRx Essentials";
 
 // With JSDoc @type annotations, IDEs can provide config autocompletion
