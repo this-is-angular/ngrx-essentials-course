@@ -20,7 +20,7 @@ As I mentioned in the previous chapter, we are going to create an Angular financ
 
 1. Open a preferred directory of yours
 2. Run the following command `ng new finance-logger`
-3. You can select a number of options, add routing, SCSS, and so on. Those options are irrelevant tou this tutorial
+3. You can select a number of options, add routing, SCSS, and so on. Those options are irrelevant to this tutorial
 4. Wait a bit
 5. Application has been created
 
@@ -48,7 +48,7 @@ And in the `imports` array of the `AppModule` declarations, add this line:
   // other metadata
   imports: [
     // other imports
-    StoreModule.forRoot(),
+    StoreModule.forRoot([]),
   ],
 })
 export class AppModule {}
@@ -58,4 +58,4 @@ export class AppModule {}
 2. Open `http://localhost:4200/`
 3. See our fresh Angular app
 
-That's it, we did the basic installations, let's now move on to chapter 3, where we will explore the the
+That's it, we did the basic installations, let's now move on to chapter 3, where we will explore the What.
