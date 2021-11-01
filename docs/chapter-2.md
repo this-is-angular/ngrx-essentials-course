@@ -48,7 +48,7 @@ And in the `imports` array of the `AppModule` declarations, add this line:
   // other metadata
   imports: [
     // other imports
-    StoreModule.forRoot([]),
+    StoreModule.forRoot({}),
   ],
 })
 export class AppModule {}
