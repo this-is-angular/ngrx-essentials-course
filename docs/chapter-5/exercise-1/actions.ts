@@ -1,4 +1,4 @@
 const deleteCategory = createAction(
   "[Category List] Delete Category",
-  props<string>()
+  props<{name: string}>()
 );
