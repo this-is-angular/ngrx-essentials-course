@@ -55,7 +55,7 @@ export class AppComponent implements OnInit {
 In the console, we will see the following:
 
 ```js
-{type: '[Category List] Add Category', payload: {name: 'Food'}}
+{name: 'Food', type: '[Category List] Add Category'}
 ```
 
 So essentially, `createAction` provided us with an easy way of creating actions of the same type. `addCategory` in our case is an `ActionCreator`, a function which produces an action object whenever called, and `props` explained what argument that `ActionCreator` function expects.
