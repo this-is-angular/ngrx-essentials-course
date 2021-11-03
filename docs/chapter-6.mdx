@@ -89,6 +89,8 @@ export function reducer(state: AppState, action: Action) {
 }
 ```
 
+> **_NOTE:_** Beware of the **payload** attribute of the Action, which only fits the "old" way to create actions. Next example will use the props and call directly the properties added to the Action.
+
 Now let's deconstruct this example. First of all, as you see, the `reducer` function is a pure function. Next, it differentiates between `Actions` using a `switch` statement and the `Action` types. On each different `Action`, our `Reducer` will return a slightly different version of a `State` to match that `Action`'s intent. As we have only one `Action` for now, we wrote only one `case` statement, and if the `Action` is not identified, we return the `state` without modifying it. As you can see, the practice is to copy the state, and return a new object. **Never modify the previous `state` object, always return a new one**.
 What will happen is when we dispatch the `addCategory` `Action`, the `reducer` function will be called, the new `State` (with the added category object in the `categories` array) will be returned, and then NgRx will propagate that change to all of our components.
 
@@ -106,9 +108,9 @@ import { AppState, initialState } from "./state";
 
 const _reducer = createReducer(
   initialState,
-  on(actions.addCategory, (state, action) => ({
+  on(actions.addCategory, (state, category) => ({
     ...state,
-    categories: [...state.categories, action.payload],
+    categories: [...state.categories, category],
   }))
 );
 
