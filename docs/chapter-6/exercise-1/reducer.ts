@@ -1,10 +1,10 @@
 const _reducer = createReducer(
   initialState,
   // other handlers
-  on(deleteCategory, (state, action) => ({
+  on(actions.deleteCategory, (state, category) => ({
     ...state,
     categories: state.categories.filter(
-      (category) => category.name !== action.payload
+      (cat) => cat.name !== category.name
     ), // filter out the deleted category
   }))
 );
