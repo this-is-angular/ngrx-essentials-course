@@ -27,14 +27,15 @@ This is an action that adds a category named `Food` to the list of all categorie
 ```ts
 // src/app/state/actions.ts
 import { createAction, props } from "@ngrx/store";
+import { Category } from "./state";
 
 export const addCategory = createAction(
   "[Category List] Add Category",
-  props<{ name: string }>()
+  props<{ category: Category }>()
 );
 ```
 
-Let's break down this example. First of all, the name `createAction` is a bit deceptive; it does not create an action; in fact, it creates a function which, when called, wil produce an action object. The first argument is the `type` of the action that will be produced. When called, the `addCategory` function will **always** create an action with type "[Category List] Create Category". The second argument uses the bizarre function `props`, which is a generic function that allows us to define the type of the `payload` which the created action will have. Essentially, it explains that in order to create the action using the `addCategory` function, we should call it and provide an object that has a property `name` which is a `string`. Let's do this and `console.log` the result.
+Let's break down this example. First of all, the name `createAction` is a bit deceptive; it does not create an action; in fact, it creates a function which, when called, wil produce an action object. The first argument is the `type` of the action that will be produced. When called, the `addCategory` function will **always** create an action with type "[Category List] Create Category". The second argument uses the bizarre function `props`, which is a generic function that allows us to define the type of the `payload` which the created action will have. Essentially, it explains that in order to create the action using the `addCategory` function, we should call it and provide an object that has a property `category` which is defined in the Interface Category defined in the AppState. Let's do this and `console.log` the result.
 
 ```ts
 // src/app/app.component.ts
@@ -47,7 +48,7 @@ import { addCategory } from "./state/actions.ts";
 })
 export class AppComponent implements OnInit {
   ngOnInit() {
-    console.log(addCategory({ name: "Food" }));
+    console.log(addCategory({category:{ name: "Food" }}));
   }
 }
 ```
@@ -55,7 +56,7 @@ export class AppComponent implements OnInit {
 In the console, we will see the following:
 
 ```js
-{name: 'Food', type: '[Category List] Add Category'}
+{category: {name: 'Food', type: '[Category List] Add Category'}}
 ```
 
 So essentially, `createAction` provided us with an easy way of creating actions of the same type. `addCategory` in our case is an `ActionCreator`, a function which produces an action object whenever called, and `props` explained what argument that `ActionCreator` function expects.

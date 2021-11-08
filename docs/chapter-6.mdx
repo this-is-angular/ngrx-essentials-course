@@ -89,6 +89,8 @@ export function reducer(state: AppState, action: Action) {
 }
 ```
 
+> **_NOTE:_** Beware of the **payload** attribute of the Action, which only fits the "old" way to create actions. Next example will use the props and call directly the properties added to the Action.
+
 Now let's deconstruct this example. First of all, as you see, the `reducer` function is a pure function. Next, it differentiates between `Actions` using a `switch` statement and the `Action` types. On each different `Action`, our `Reducer` will return a slightly different version of a `State` to match that `Action`'s intent. As we have only one `Action` for now, we wrote only one `case` statement, and if the `Action` is not identified, we return the `state` without modifying it. As you can see, the practice is to copy the state, and return a new object. **Never modify the previous `state` object, always return a new one**.
 What will happen is when we dispatch the `addCategory` `Action`, the `reducer` function will be called, the new `State` (with the added category object in the `categories` array) will be returned, and then NgRx will propagate that change to all of our components.
 
@@ -106,9 +108,9 @@ import { AppState, initialState } from "./state";
 
 const _reducer = createReducer(
   initialState,
-  on(actions.addCategory, (state, action) => ({
+  on(actions.addCategory, (state, {category}) => ({
     ...state,
-    categories: [...state.categories, action.payload],
+    categories: [...state.categories, category],
   }))
 );
 
@@ -117,7 +119,7 @@ export function reducer(state: AppState, action: Action) {
 }
 ```
 
-Let's understand what goes on here. First of all, we have the `createReducer` function, which does exactly that - creates the resulting `Reducer` function. It receives the initial state of the application, and then an arbitrary amount of handlers for each action (we provided only one, but we can (and will!) have lots of `Actions`, and thus. lots of `on` function calls). The `on` function receives an `Action` as the first argument, and a callback function as a second one, which acts like a mini-`Reducer` for only that specific `Action`. Thus, the need to write huge `switch` statements is eliminated. Now let's understand two specific parts of this code:
+Let's understand what goes on here. First of all, we have the `createReducer` function, which does exactly that - creates the resulting `Reducer` function. It receives the initial state of the application, and then an arbitrary amount of handlers for each action (we provided only one, but we can (and will!) have lots of `Actions`, and thus. lots of `on` function calls). The `on` function receives an `Action` as the first argument, and a callback function as a second one, which acts like a mini-`Reducer` for only that specific `Action`. Thus, the need to write huge `switch` statements is eliminated. Note that the callback signature is (state, {category}) in which we [destruct](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#object_destructuring) the action passed in the second argument in order to only get the props. Now let's understand two specific parts of this code:
 
 1. _Why did we create a `_reducer` function only to call it in the `reducer` function?_ The thing is, in the next chapters we are going to register the `reducer` function in our `AppModule`, and because of how the Angular build process works, it does not allow including anonymous functions like the one returned by `createReducer`, only declared named functions. Thus we wrote a conventional function and called our `_reducer` from it. **Always create `Reducers` like this**.
 2. _Why didn't we `import` the `Action` we wanted by name, but rather did `import * as actions from './actions';`? Because we can easily have dozens of `Actions` that are handled in a single `Reducer` function, we would like to import them as a single object to avoid too cluttered imports.
