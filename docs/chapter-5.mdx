@@ -41,7 +41,7 @@ Let's break down this example. First of all, the name `createAction` is a bit de
 // src/app/app.component.ts
 import { Component, OnInit } from "@angular/core";
 
-import { addCategory } from "./state/actions.ts";
+import { addCategory } from "./state/actions";
 
 @Component({
   // component boilerplate omitted for the sake of brevity
@@ -67,7 +67,7 @@ Yes, you've read it correctly: we have learned how to write some basic code in N
 _For this homework, assume categories cannot have duplicate names. We will deal with this problem later_
 
 1. Create an action for deleting a category. It should receive a string with the name of the category, and in the next chapter we will use that code to write the actual logic for deleting the category.
-2. Create an action for updating a category. It must receive a `Category` object (`{name: string}`), and again, we will right the code to update the category in the next chapter
+2. Create an action for updating a category. It must receive a `Category` object (`{name: string}`), and again, we will write the code to update the category in the next chapter
 
 > You will find solution code for all the homeworks in the end of the chapters
 > **Important!** Do not move to the next chapter without adding the homework code! We will be using that code in the next chapters
