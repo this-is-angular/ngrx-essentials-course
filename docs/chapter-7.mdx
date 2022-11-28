@@ -43,8 +43,7 @@ ng generate component CategoryListPresenter
 
 Now we have two components. Let's start with the presenter, because it is the simple one. Basically, we just need to receive the array of categories as an `@Input` property, and display the categories using `*ngFor`. Let's write that code:
 
-```ts
-// src/app/category-list/category-list-presenter/category-list-presenter.component.ts
+```ts title="src/app/category-list/category-list-presenter/category-list-presenter.component.ts"
 import { Component, Input, ChangeDetection } from "@angular/core";
 
 // import the Category interface from wherever you put it
@@ -61,9 +60,9 @@ export class CategoryListPresenter {
 
 The component class code is ready - simple as that. Now, to display the list of categories, let's import some components from Angular Material into our `AppModule`. We will be using the `<mat-list>` component to display a very basic list of our categories:
 
-```ts
-// src/app/app.module.ts
+```ts title="src/app/app.module.ts"
 // other import statements omitted for the sake of brevity
+
 import { MatListModule } from "@angular/material";
 
 @NgModule({
@@ -79,10 +78,7 @@ export class AppModule {}
 
 We are all set to write the template for the presenter component:
 
-```html
-<--
-src/app/category-list/category-list-presenter/category-list-presenter.component.html
--->
+```html title="src/app/category-list/category-list-presenter/category-list-presenter.component.html"
 <mat-list>
   <mat-list-item *ngFor="let category of categories"
     >{{ category.name }}</mat-list-item
@@ -93,9 +89,9 @@ src/app/category-list/category-list-presenter/category-list-presenter.component.
 
 Now the only thing left is to select the data from the `Store` in the container component, and pass it as `@Input` to the presenter. To select the data, we need to inject the `Store` into our component. The `Store` is a special service-class from NgRx that allows us to interact with the `State`. To inject that store, we need to import the `StoreModule` into our `AppModule`, and provide the `Reducer` from our previous chapter, so that NgRx knows what is our data an how it is modified. Let's do this:
 
-```ts
-// src/app/app.module.ts
+```ts title="src/app/app.module.ts"
 // other import statements omitted for the sake of brevity
+
 import { StoreModule } from "@ngrx/store";
 import { reducer } from "./state/reducer";
 
@@ -116,8 +112,7 @@ Now it is time to write the `Selectors`.
 
 Selectors are functions, as you remember from a past paragraph. We usually put them in separate files. In the `state` folder, create a new file named `selectors.ts`, and let's write our first selector, that return the list of the categories:
 
-```ts
-// src/app/state/selectors.ts
+```ts title="src/app/state/selectors.ts"
 import { AppState } from "./state";
 
 export const categories = (state: { categories: AppState }) =>
@@ -138,8 +133,7 @@ and returns that `categories` array.
 
 Now let's use it in the container component. As mentioned, we inject the `Store` and select the state slice using our brand new selector. Here is how it will look like:
 
-```ts
-// src/app/category-list/category-list-container/category-list-container.component.ts
+```ts title="src/app/category-list/category-list-container/category-list-container.component.ts"
 import { Component } from "@angular/core";
 import { Store } from "@ngrx/store";
 
@@ -163,9 +157,7 @@ And that's it. Let's understand what happened here. First, we imported and injec
 
 Now let's create some routing. Let's create a routing module and a route that takes us to the category list page. Create an `app.routing.module.ts` file and put the following code in it:
 
-```ts
-// src/app/app.routing.module.ts
-
+```ts title="src/app/app.routing.module.ts"
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
@@ -186,9 +178,7 @@ export class AppRoutingModule {}
 
 Now open your app and navigate to `/categories`. Aaaand... nothing. You won't see anything. That is because we don't have any categories in our `initialState`! It was an empty array, remember? Let's change it a bit, so that it contains the most basic expense everyone makes: Food:
 
-```ts
-// src/app/state/state.ts
-
+```ts title="src/app/state/state.ts"
 // rest of the file omitted for the sake of brevity
 
 const initialState: AppState = {
