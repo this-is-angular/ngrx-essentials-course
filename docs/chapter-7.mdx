@@ -80,11 +80,10 @@ We are all set to write the template for the presenter component:
 
 ```html title="src/app/category-list/category-list-presenter/category-list-presenter.component.html"
 <mat-list>
-  <mat-list-item *ngFor="let category of categories"
-    >{{ category.name }}</mat-list-item
-  >
-  <.mat-list></mat-list
->
+  <mat-list-item *ngFor="let category of categories">
+    {{ category.name }}
+  </mat-list-item>
+</mat-list>
 ```
 
 Now the only thing left is to select the data from the `Store` in the container component, and pass it as `@Input` to the presenter. To select the data, we need to inject the `Store` into our component. The `Store` is a special service-class from NgRx that allows us to interact with the `State`. To inject that store, we need to import the `StoreModule` into our `AppModule`, and provide the `Reducer` from our previous chapter, so that NgRx knows what is our data an how it is modified. Let's do this:
@@ -141,8 +140,10 @@ import { categories } from "../../state/selectors";
 
 @Component({
   selector: "app-category-list-presenter",
-  template:
-    '<app-category-list-presenter [categories]="categories$ | async"></app-category-list-presenter>',
+  template: `
+    <app-category-list-presenter [categories]="categories$ | async">
+    </app-category-list-presenter>
+  `,
 })
 export class CategoryListContainer {
   categories$ = this.store.select(categories);
