@@ -17,7 +17,7 @@ In most cases, we have bugs not because the code is wrong (in that case we essen
 
 ## What does NgRx offer?
 
-NgRx, as mentioned, is built on concepts of Redux. It utilizes core ideas like `Stores` (the place where the application states is stored), `Actions` (events that notify the `Store` that some change to the state is to happen), `Reducers` (functions that determine how a certain `Action` affects the `State`), and also adds concepts like `Selectors` (functions that allow to pick a slice of the `State` as an `Observable`) and `Effects` (special functions that work on side effects like data loading and API calls). It also provides utility functions to make writing boilerplate code easier and even utility libraries like `@ngrx/entity` to work with large lists of data. We will learn in depth about all of those concepts and tools in corresponding chapters.
+NgRx, as mentioned, is built on concepts of Redux. It utilizes core ideas like `Stores` (the place where the application states are stored), `Actions` (events that notify the `Store` that some change to the state is to happen), `Reducers` (functions that determine how a certain `Action` affects the `State`), and also adds concepts like `Selectors` (functions that allow to pick a slice of the `State` as an `Observable`) and `Effects` (special functions that work on side effects like data loading and API calls). It also provides utility functions to make writing boilerplate code easier and even utility libraries like `@ngrx/entity` to work with large lists of data. We will learn in depth about all of those concepts and tools in corresponding chapters.
 
 Together, this tools allow us to build a truly scalable state management solution.
 
