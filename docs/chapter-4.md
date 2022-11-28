@@ -13,7 +13,7 @@ As mentioned in the previous chapter, we need a state management solution that i
 
 ### How do bugs happen?
 
-In most cases, we have bugs not because the code is wrong (in that case we essentially didn't tell the computer what _exactly_ we wanted), but because the data is not in the expected state. The variable `age` all of a sudden holds a negative value, because someone misclicked when the IDE offered an autocomplete or a correction. Or maybe the Array of users is empty, because we called the wrong API, or stored the data in the wrong variable, or forgot to subscribe. Problems like this happen _all the time_. Remember the last vry annoying bug you encountered. Was it because of a very minor mistake like a typo? If yes, answer the following: how frustrating was the whole experience?
+In most cases, we have bugs not because the code is wrong (in that case we essentially didn't tell the computer what _exactly_ we wanted), but because the data is not in the expected state. The variable `age` all of a sudden holds a negative value, because someone misclicked when the IDE offered an autocomplete or a correction. Or maybe the Array of users is empty, because we called the wrong API, or stored the data in the wrong variable, or forgot to subscribe. Problems like this happen _all the time_. Remember the last very annoying bug you encountered. Was it because of a very minor mistake like a typo? If yes, answer the following: how frustrating was the whole experience?
 
 ## What does NgRx offer?
 
