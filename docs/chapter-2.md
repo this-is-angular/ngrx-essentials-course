@@ -62,7 +62,7 @@ Since Angular is heavily pushing towards standalone components, let's remove our
 1. Remove the `app.module.ts`
 1. Replace the following content in `main.ts` to indicate Angular to create the application from your `AppComponent` instead of your `AppModule`:  
 
-```diff
+```diff title="main.ts"
 - platformBrowserDynamic().bootstrapModule(AppModule)
 + bootstrapApplication(AppComponent)
   .catch(err => console.error(err));
@@ -72,7 +72,7 @@ Since Angular is heavily pushing towards standalone components, let's remove our
 
 Finally, all we have to do is to add our (empty) store to the app before launching it by calling `provideStore` from the application's providers:
 
-```ts {2}
+```ts {2} title="main.ts"
 bootstrapApplication(AppComponent, {
   providers: [ provideStore() ]
 }).catch((err) => console.error(err));
