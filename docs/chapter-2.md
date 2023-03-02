@@ -9,53 +9,79 @@ sidebar_position: 2
 
 If you already have NodeJS and Angular CLI on your machine, skip this step. Otherwise, do the following:
 
-1. Download NodeJS
-2. Install it on your machine. This may take several minutes
-3. Install Angular CLI: open your command line tool/terminal and run the following command: `npm install @angular/cli -g`
-4. We are done. You can read more about Angular CLI in the official docs
+1. Download and install [NodeJS](https://nodejs.org)
+1. Install the [Angular CLI](https://angular.io/cli) by running the following command:  
+
+  ```sh
+  npm install -g @angular/cli
+  ```
 
 ### Creating the project
 
-As I mentioned in the previous chapter, we are going to create an Angular finance logging application with NgRx. Let's create this project and get started:
+As I mentioned in the previous chapter, we are going to create an Angular finance logging application with NgRx.
 
-1. Open a preferred directory of yours
-2. Run the following command `ng new finance-logger`
-3. You can select a number of options, add routing, SCSS, and so on. Those options are irrelevant to this tutorial
-4. Wait a bit
-5. Application has been created
+Let's create this project and get started by creating a new Angular project:
 
-Now let's add NgRx to the party:
+```sh
+ng new finance-logger --minimal --defaults
+```
 
-1. Run the command `cd financial-logger` to move to the root directory of our project
-2. Run the command `npm install @ngrx/store` to get NgRx
-3. NgRx consists of several packages, but the most basic functionality is inside `@ngrx/store`.
-4. We will add more packages as we dive into more complex concepts
+Let's now add NgRx `store` to the party:
 
-That's it. Now we have an empty project with NgRx installed.
+```sh
+cd financial-logger
+npm install @ngrx/store
+```
+
+:::note
+
+NgRx is divided into [several packages](https://ngrx.io/docs#packages), but the most basic functionalities are provided from `@ngrx/store`, we will be using additional packages as we dive into more complex concepts.
+
+:::
+
+That's it, we now have an empty project with NgRx installed!
+
+### Using standalone components
+
+Since Angular is heavily pushing towards standalone components, let's remove our `AppModule` by taking advantage of the new syntax:
+
+1. Set the `standalone` flag to true in the `app.component.ts`:  
+
+  ```ts {3} title="app.component.ts"
+  @Component({
+  selector: 'app-root',
+  standalone: true,
+  template: '...',
+  styles: []
+  })
+  export class AppComponent {
+    title = 'finance-logger';
+  }
+  ```
+
+1. Remove the `app.module.ts`
+1. Replace the following content in `main.ts` to indicate Angular to create the application from your `AppComponent` instead of your `AppModule`:  
+
+```diff
+- platformBrowserDynamic().bootstrapModule(AppModule)
++ bootstrapApplication(AppComponent)
+  .catch(err => console.error(err));
+```
 
 ## Up and running
 
-In the `app.module.ts` file, add the following import:
+Finally, all we have to do is to add our (empty) store to the app before launching it by calling `provideStore` from the application's providers:
 
-```ts
-import { StoreModule } from "@ngrx/store";
+```ts {2}
+bootstrapApplication(AppComponent, {
+  providers: [ provideStore() ]
+}).catch((err) => console.error(err));
 ```
 
-And in the `imports` array of the `AppModule` declarations, add this line:
+We are all set! You can run the following commmand to launch our Angular application and see it running on [http://localhost:4200/](http://localhost:4200/):
 
-```ts
-@NgModule({
-  // other metadata
-  imports: [
-    // other imports
-    StoreModule.forRoot({}),
-  ],
-})
-export class AppModule {}
+```sh
+ng serve --open
 ```
 
-1. Run `ng serve`
-2. Open `http://localhost:4200/`
-3. See our fresh Angular app
-
-That's it, we did the basic installations, let's now move on to chapter 3, where we will explore the What.
+Now that the setup is done, we can move on to [chapter 3](./chapter-3.md) where we will explore what NgRx is and where it came from.
