@@ -114,7 +114,7 @@ const title = "NgRx Essentials";
         ],
         logo: {
           alt: title,
-          src: "img/logo.svg",
+          src: "img/logo.png",
         },
         title,
       },
