@@ -3,10 +3,6 @@ title: "Chapter 5: Actions"
 sidebar_position: 5
 ---
 
-import CodeBlock from "@theme/CodeBlock";
-import Exercise1Actions from "!!raw-loader!./chapter-5/exercise-1/actions";
-import Exercise2Actions from "!!raw-loader!./chapter-5/exercise-2/actions";
-
 ## What are Actions?
 
 `Actions` are the most simple core concept of NgRx (and Redux in general). Action is a unique event that is used to trigger a change in the state. What does it mean? For example, we might have an action that says "Home page has been loaded". It might mean some changes in the state. For example, in our application, it might trigger an API call for lists of expenses and incomes, which will in turn trigger an event that puts that data in the `Store`, resulting in a change in the UI. Or we might have an action that says "Add a category", which will create a new category of income/expense in the `Store`, again resulting in a UI change. Again, essentially `Actions` are like commands to the `Store`, or methods that allow to update its contents.
@@ -22,10 +18,20 @@ const addCategoryAction = {
 };
 ```
 
-This is an action that adds a category named `Food` to the list of all categories. Of course, we still haven't written the logic that actually uses this action to put the data in the store, but for now we are focusing on the `Actions`. In NgRx, there is a simpler, built-in way of creating `Actions`, namely the `createAction` function. To start learning about it, let's create a folder names `state` in our `src/app` directory, and a file called `actions.ts` inside it. Now, let's put this code inside that file:
+This is an action that adds a category named `Food` to the list of all categories. Of course, we still haven't written the logic that actually uses this action to put the data in the store, but for now we are focusing on the `Actions`.
 
-```ts
-// src/app/state/actions.ts
+
+### Creating an action
+
+NgRx provides some utility functions to help us create actions instead of creating our objects by hand as we did in the previous example.
+
+To start learning about those, let's create a folder names `state` in the `src/app` directory, and a file called `actions.ts` inside it.
+
+#### Using `createAction`
+
+The first way of doing so is by using `createAction` which will create a single action given the name and the parameters provided:
+
+```ts title="state/actions.ts"
 import { createAction, props } from "@ngrx/store";
 import { Category } from "./state";
 
@@ -37,15 +43,11 @@ export const addCategory = createAction(
 
 Let's break down this example. First of all, the name `createAction` is a bit deceptive; it does not create an action; in fact, it creates a function which, when called, wil produce an action object. The first argument is the `type` of the action that will be produced. When called, the `addCategory` function will **always** create an action with type "[Category List] Create Category". The second argument uses the bizarre function `props`, which is a generic function that allows us to define the type of the `payload` which the created action will have. Essentially, it explains that in order to create the action using the `addCategory` function, we should call it and provide an object that has a property `category` which is defined in the Interface Category defined in the AppState. Let's do this and `console.log` the result.
 
-```ts
-// src/app/app.component.ts
+```ts title="app.component.ts"
 import { Component, OnInit } from "@angular/core";
-
 import { addCategory } from "./state/actions";
 
-@Component({
-  // component boilerplate omitted for the sake of brevity
-})
+@Component({/* ... */})
 export class AppComponent implements OnInit {
   ngOnInit() {
     console.log(addCategory({category:{ name: "Food" }}));
@@ -59,32 +61,145 @@ In the console, we will see the following:
 {category: {name: 'Food', type: '[Category List] Add Category'}}
 ```
 
-So essentially, `createAction` provided us with an easy way of creating actions of the same type. `addCategory` in our case is an `ActionCreator`, a function which produces an action object whenever called, and `props` explained what argument that `ActionCreator` function expects.
+So essentially, `createAction` provided us with an easy way of creating a single action. `addCategory` in our case is an `ActionCreator`, a function which produces an action object whenever called, and `props` explained what argument that `ActionCreator` function expects.
 
-### Homework
+#### Using `createActionGroup`
+
+As we just saw, creating an action is pretty straightforward.
+
+However, when dealing with multiple actions, this can led to a more verbose code and prone to typos:
+
+```ts title="state/actions.ts"
+export const addCategory = createAction(
+  "[Category List] Add Category",
+  props<{ category: Category }>()
+);
+
+export const addAnotherCategory = createAction(
+  //  👇 Did you notice the typo?
+  "[Catgory List] Add Another Category",
+  props<{ category: Category }>()
+);
+```
+
+With those issues in mind, NgRx published a new function that allows us to create multiple actions at one: the `createActionGroup` function.
+
+Its usage is fairly simple and is based on two parameters:
+
+- The source of the action, in our case `Category List`
+- A serie of properties symbolizing our actions and their parameters
+
+Let's go back to the previous example to see what is changing:
+
+```ts title="state/actions.ts"
+export const categoryActions = createActionGroup({
+  source: 'Category List',
+  events: {
+    'Add Category': props<{ category: Category }>(),
+    'Add Another Category': props<{ category: Category }>(),
+  }
+})
+```
+
+By doing so, all our related actions will be grouped together and we still can create them by calling the `categoryActions` variable that automatically generates you the code to create them:
+
+```ts
+categoryActions.addCategory({ category: 'Food' });
+categoryActions.addAnotherCategory({ category: 'Food' });
+```
+
+## Homework
 
 Yes, you've read it correctly: we have learned how to write some basic code in NgRx, so it is time for some homework!
-_For this homework, assume categories cannot have duplicate names. We will deal with this problem later_
 
-1. Create an action for deleting a category. It should receive a string with the name of the category, and in the next chapter we will use that code to write the actual logic for deleting the category.
-2. Create an action for updating a category. It must receive a `Category` object (`{name: string}`), and again, we will write the code to update the category in the next chapter
+:::info
 
-> You will find solution code for all the homeworks in the end of the chapters
-> **Important!** Do not move to the next chapter without adding the homework code! We will be using that code in the next chapters
+We **strongly** recommand you not to move on to the next chapter without adding the homework code as we will be using that code in the next chapters
+
+:::
+
+1. **Create an action for deleting a category**  
+   It should receive a string with the name of the category, and in the next chapter we will use that code to write the actual logic for deleting the category.
+2. **Create an action for updating a category**  
+   It must receive a `Category` object (`{name: string}`), and again, we will write the code to update the category in the next chapter
+
+> For this homework, assume categories cannot have duplicate names. We will deal with this problem later.
+
+:::note
+
+You will find solution code for all the homeworks in the end of the chapters
+
+:::
 
 In this chapter, we learned how to create `Actions`, unique events that specify what should happen to the state. In the next one, we will be writing code that actually does the transformation in the state.
 
-<details>
-  <summary>Exercise 1 solution</summary>
+---
 
-  <CodeBlock title="actions.ts" className="language-ts">
-    {Exercise1Actions}
-  </CodeBlock>
+<details>
+<summary>Exercise 1 solution</summary>
+
+**Using `createActionGroup`:**
+
+```ts {5} title="state/actions.ts"
+export const categoryActions = createActionGroup({
+  source: 'Category List',
+  events: {
+    'Add Category': props<{ category: Category }>(),
+    'Delete Category': props<{ category: Category }>(),
+  }
+})
+```
+
+**Using `createAction`:**
+
+```ts {6-9} title="state/actions.ts"
+export const addCategory = createAction(
+  "[Category List] Add Category",
+  props<{ category: Category }>()
+);
+
+export const deleteCategory = createAction(
+  "[Category List] Delete Category",
+  props<{name: string}>()
+);
+```
+
 </details>
 
 <details>
-  <summary>Exercise 2 solution</summary>
-  <CodeBlock title="actions.ts" className="language-ts">
-    {Exercise2Actions}
-  </CodeBlock>
+<summary>Exercise 2 solution</summary>
+
+**Using `createActionGroup`:**
+
+```ts {6} title="state/actions.ts"
+export const categoryActions = createActionGroup({
+  source: 'Category List',
+  events: {
+    'Add Category': props<{ category: Category }>(),
+    'Delete Category': props<{ category: Category }>(),
+    'Update Category': props<{ category: Category }>(),
+  }
+})
+```
+
+**Using `createAction`:**
+
+```ts {11-14} title="state/actions.ts"
+export const addCategory = createAction(
+  "[Category List] Add Category",
+  props<{ category: Category }>()
+);
+
+export const deleteCategory = createAction(
+  "[Category List] Delete Category",
+  props<{name: string}>()
+);
+
+export const updateCategory = createAction(
+  "[Category List] Update Category",
+  props<{ name: string }>()
+);
+
+```
+
 </details>
