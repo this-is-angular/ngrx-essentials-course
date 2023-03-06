@@ -58,7 +58,10 @@ export class AppComponent implements OnInit {
 In the console, we will see the following:
 
 ```js
-{category: {name: 'Food', type: '[Category List] Add Category'}}
+{
+  type: "[Category List] Add Category",
+  category: { name: "Food" }
+}
 ```
 
 So essentially, `createAction` provided us with an easy way of creating a single action. `addCategory` in our case is an `ActionCreator`, a function which produces an action object whenever called, and `props` explained what argument that `ActionCreator` function expects.
@@ -67,7 +70,7 @@ So essentially, `createAction` provided us with an easy way of creating a single
 
 As we just saw, creating an action is pretty straightforward.
 
-However, when dealing with multiple actions, this can led to a more verbose code and prone to typos:
+However, when dealing with multiple actions, this can lead to a more verbose code and prone to typos:
 
 ```ts title="state/actions.ts"
 export const addCategory = createAction(
@@ -87,7 +90,7 @@ With those issues in mind, NgRx published a new function that allows us to creat
 Its usage is fairly simple and is based on two parameters:
 
 - The source of the action, in our case `Category List`
-- A serie of properties symbolizing our actions and their parameters
+- A series of properties symbolizing our actions and their parameters
 
 Let's go back to the previous example to see what is changing:
 
@@ -108,6 +111,12 @@ categoryActions.addCategory({ category: 'Food' });
 categoryActions.addAnotherCategory({ category: 'Food' });
 ```
 
+:::note
+
+Notice that our action types like `Add Category` written in plain English are converted to `addCategory` - a camel case variable name. This magic is done using [TypeScript's template literal types](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html) and the [mapped types](https://www.typescriptlang.org/docs/handbook/2/mapped-types.html#handbook-content). [The source code for this](https://github.com/ngrx/platform/blob/master/modules/store/src/action_group_creator_models.ts) is pretty fascinating, if you're a TypeScript enthusiast, I strongly recommend checking it out or listen to. You can also listen to [Brandon Robert's video about the "TypeScript magic" behind the scenes](https://www.youtube.com/watch?v=V6eHIvwDFP4).
+
+:::
+
 ## Homework
 
 Yes, you've read it correctly: we have learned how to write some basic code in NgRx, so it is time for some homework!
@@ -118,16 +127,16 @@ We **strongly** recommand you not to move on to the next chapter without adding 
 
 :::
 
-1. **Create an action for deleting a category**  
+1. **Create an action for deleting a category**
    It should receive a string with the name of the category, and in the next chapter we will use that code to write the actual logic for deleting the category.
-2. **Create an action for updating a category**  
+2. **Create an action for updating a category**
    It must receive a `Category` object (`{name: string}`), and again, we will write the code to update the category in the next chapter
 
 > For this homework, assume categories cannot have duplicate names. We will deal with this problem later.
 
 :::note
 
-You will find solution code for all the homeworks in the end of the chapters
+You will find solution code for all the homeworks at the end of the chapters
 
 :::
 
