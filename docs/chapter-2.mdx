@@ -13,7 +13,7 @@ import TabItem from '@theme/TabItem';
 If you already have NodeJS and Angular CLI on your machine, skip this step. Otherwise, do the following:
 
 1. Download and install [NodeJS](https://nodejs.org)
-1. Install the [Angular CLI](https://angular.io/cli) by running the following command:
+2. Install the [Angular CLI](https://angular.io/cli) by running the following command:
 
   ```sh
   npm install -g @angular/cli
@@ -50,18 +50,18 @@ Angular has introduced the notion of [standalone components](https://angular.io/
 
   ```ts {3} title="app.component.ts"
   @Component({
-  selector: 'app-root',
-  standalone: true,
-  template: '...',
-  styles: []
+    selector: 'app-root',
+    standalone: true,
+    template: '...',
+    styles: []
   })
   export class AppComponent {
     title = 'finance-logger';
   }
   ```
 
-1. Remove the `app.module.ts`
-1. Replace the following content in `main.ts` to indicate Angular to create the application from your `AppComponent` instead of your `AppModule`:
+2. Remove the `app.module.ts`
+3. Replace the following content in `main.ts` to indicate Angular to create the application from your `AppComponent` instead of your `AppModule`:
 
 ```diff title="main.ts"
 - platformBrowserDynamic().bootstrapModule(AppModule)
@@ -89,15 +89,7 @@ bootstrapApplication(AppComponent, {
 }).catch((err) => console.error(err));
 ```
 
-Alternatively, you can use the former way of adding the store using `StoreModule` by calling it like this:
-
-```ts {2-4} title="main.ts"
-bootstrapApplication(AppComponent, {
-  providers: [
-    importProvidersFrom(StoreModule.forRoot({})),
-  ]
-}).catch(err => console.error(err));
-```
+Alternatively, you can use the former way of adding the store using `StoreModule` by calling `importProvidersFrom`, however we do not recommand you to do so since you can take advantage of the new API.
 
 </TabItem>
 <TabItem value="appmodule">
