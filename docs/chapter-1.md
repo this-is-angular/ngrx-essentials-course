@@ -21,6 +21,9 @@ After you complete this tutorial, you will
 
 ### What will we do?
 
+Project code
+[https://github.com/this-is-angular/ngrx-course-app](https://github.com/this-is-angular/ngrx-course-app)
+
 I hold a firm belief that in order to learn and understand something thoroughly, one has to put that knowledge to practice as soon as possible. So in this tutorial, we won't be just learning NgRx concepts and exploring small examples; we will be building a (not so large) Angular app on NgRx, that has practical value and real-world challenges. What kind of project is that? Well, to better understand the concepts of state management, we will build a financial logging application, a tool that allows the user to add income and expense logs, monitor their spending, categorize it, and even view charts. We will explore **all** NgRx concepts during the development of that app. The app already exists, written by me, and can be found at this GitHub Repository (visit it and follow instructions to install and run it on your machine). You can of course view the existing app, but it would be far more beneficial to build it together, step-by-step, grasping all the concepts and using the best known practices.
 
 ### How is this tutorial structured?
